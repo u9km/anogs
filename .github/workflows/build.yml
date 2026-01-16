@@ -1,28 +1,48 @@
-name: Build Titanium God Mode
+name: Build Titanium (Auto-SDK)
 
 on:
+  workflow_dispatch: # يسمح لك ببدء البناء يدوياً بضغطة زر
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-latest # بيئة ماك للبناء الصحيح
+    
     steps:
+      # 1. سحب الكود المصدري (V4)
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Theos
+      # 2. تثبيت Theos + تحميل SDK تلقائياً (الخطوة السحرية)
+      - name: Setup Theos & Download SDKs
         run: |
+          # تثبيت Theos في البيئة الافتراضية
           bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
           echo "THEOS=~/theos" >> $GITHUB_ENV
+          export THEOS=~/theos
+          
+          # تحميل حزمة SDKs الرسمية وفك ضغطها تلقائياً
+          # هذا يغنيك عن رفع مجلد sdks بنفسك
+          echo "Downloading iOS SDKs..."
+          curl -L -o sdks.zip https://github.com/theos/sdks/archive/master.zip
+          unzip -q sdks.zip
+          mv sdks-master/*.sdk $THEOS/sdks/
+          rm -r sdks-master sdks.zip
+          echo "SDKs installed successfully!"
 
+      # 3. بناء الأداة (Compile)
       - name: Build Tweak
         run: |
+          # تنظيف أي بناء سابق
+          make clean
+          # أمر البناء النهائي (بدون ديباج لتقليل الحجم)
           make package FINALPACKAGE=1 DEBUG=0
 
-      - name: Upload Artifact
+      # 4. رفع الملف الناتج (V4)
+      - name: Upload Dylib Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Titanium_Dylib
+          # نرفع ملف dylib مباشرة لأنه هو المطلوب للحقن بـ Sideloadly
           path: .theos/obj/debug/*.dylib
