@@ -5,16 +5,13 @@
 #import <time.h>
 #import <dlfcn.h>
 #import <string.h>
-
-// --- [تصحيح الخطأ] ---
-// تمت إضافة هذه المكتبات لحل مشكلة socklen_t و connect
 #import <sys/types.h>
 #import <sys/socket.h>
 #import <netinet/in.h>
 #import <arpa/inet.h>
 
 // ============================================================================
-//  TITANIUM GOD MODE: UNIVERSAL EDITION (FIXED)
+//  TITANIUM GOD MODE: UNIVERSAL EDITION (LINKER FIXED)
 // ============================================================================
 
 // --- 1. Smart Helpers ---
@@ -36,21 +33,18 @@ uint64_t get_real_address(uint64_t offset) {
 
 // --- 2. Universal System Hooks ---
 
-// Abort Hook
 void (*old_abort)(void);
 void new_abort(void) {
     if (is_caller_anogs()) return;
     old_abort();
 }
 
-// Sysctl Hook
 int (*old_sysctl)(int *name, u_int namelen, void *oldp, size_t *oldlenp, void *newp, size_t newlen);
 int new_sysctl(int *name, u_int namelen, void *oldp, size_t *oldlenp, void *newp, size_t newlen) {
     if (is_caller_anogs()) return -1; 
     return old_sysctl(name, namelen, oldp, oldlenp, newp, newlen);
 }
 
-// Connect Hook (Socket Fix)
 int (*old_connect)(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 int new_connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
     if (is_caller_anogs()) return -1;
@@ -62,64 +56,57 @@ void null_void(void) { return; }
 int return_zero(void) { return 0; }
 void* return_null_ptr(void) { return NULL; }
 
-// Speed Hook
 uint64_t (*old_mach_time)(void);
 uint64_t new_mach_time(void) { return old_mach_time(); }
-
-// Quick Data Symbols
-extern "C" void* _AnoSDKGetReportData2();
-extern "C" void* _AnoSDKGetReportData3();
-extern "C" void* _AnoSDKGetReportData4();
 
 // --- 4. Main Constructor ---
 
 %ctor {
     NSLog(@"[Titanium] Injecting Universal God Mode...");
 
-    // Part A: Dynamic Hooks
+    // Part A: Dynamic System Hooks
     MSHookFunction((void *)abort, (void *)new_abort, (void **)&old_abort);
     MSHookFunction((void *)sysctl, (void *)new_sysctl, (void **)&old_sysctl);
-    
-    // تم إصلاح Connect الآن بعد إضافة المكتبة
     MSHookFunction((void *)connect, (void *)new_connect, (void **)&old_connect);
     MSHookFunction((void *)mach_absolute_time, (void *)new_mach_time, (void **)&old_mach_time);
 
-    // Part B: Static Offsets
-    // Anti-Crash
+    // Part B: Static Offsets (Your File Specific)
     MSHookFunction((void *)get_real_address(0x82FBC), (void *)null_void, NULL);
     MSHookFunction((void *)get_real_address(0x30028), (void *)null_void, NULL);
     MSHookFunction((void *)get_real_address(0x79930), (void *)null_void, NULL);
-    
-    // Heartbeat
     MSHookFunction((void *)get_real_address(0x447B0), (void *)return_zero, NULL);
     MSHookFunction((void *)get_real_address(0x2ED6C), (void *)return_zero, NULL);
-
-    // Combat
     MSHookFunction((void *)get_real_address(0x815C4), (void *)null_void, NULL);
     MSHookFunction((void *)get_real_address(0x7B2A8), (void *)null_void, NULL);
-
-    // System
     MSHookFunction((void *)get_real_address(0x10C24), (void *)return_zero, NULL);
     MSHookFunction((void *)get_real_address(0x2D69C), (void *)null_void, NULL);
     MSHookFunction((void *)get_real_address(0x2D92C), (void *)null_void, NULL);
-
-    // Anti-Report & Data
     MSHookFunction((void *)get_real_address(0x3667C), (void *)null_void, NULL);
     MSHookFunction((void *)get_real_address(0x371E0), (void *)null_void, NULL);
     MSHookFunction((void *)get_real_address(0x2DD2C), (void *)null_void, NULL);
     MSHookFunction((void *)get_real_address(0x102D48), (void *)null_void, NULL);
-    
-    // Quick Data
-    MSHookFunction((void *)_AnoSDKGetReportData2, (void *)return_null_ptr, NULL);
-    MSHookFunction((void *)_AnoSDKGetReportData3, (void *)return_null_ptr, NULL);
-    MSHookFunction((void *)_AnoSDKGetReportData4, (void *)return_null_ptr, NULL);
-    MSHookFunction((void *)dlsym(RTLD_DEFAULT, "_AnoSDKDelReportData3"), (void *)null_void, NULL);
-    MSHookFunction((void *)dlsym(RTLD_DEFAULT, "_AnoSDKDelReportData4"), (void *)null_void, NULL);
-    
-    // Data Parsers
     MSHookFunction((void *)get_real_address(0x172DC0), (void *)return_null_ptr, NULL);
     MSHookFunction((void *)get_real_address(0x1007FC), (void *)return_null_ptr, NULL);
     MSHookFunction((void *)get_real_address(0x173BF0), (void *)return_null_ptr, NULL);
+
+    // Part C: Quick Data (FIXED LINKER ISSUE)
+    // هنا قمنا بإزالة extern واستخدمنا dlsym للبحث عن الدالة وقت التشغيل فقط
+    // هذا يمنع خطأ Linker Error 100%
+    
+    void *sym_get2 = dlsym(RTLD_DEFAULT, "_AnoSDKGetReportData2");
+    if (sym_get2) MSHookFunction(sym_get2, (void *)return_null_ptr, NULL);
+
+    void *sym_get3 = dlsym(RTLD_DEFAULT, "_AnoSDKGetReportData3");
+    if (sym_get3) MSHookFunction(sym_get3, (void *)return_null_ptr, NULL);
+    
+    void *sym_get4 = dlsym(RTLD_DEFAULT, "_AnoSDKGetReportData4");
+    if (sym_get4) MSHookFunction(sym_get4, (void *)return_null_ptr, NULL);
+    
+    void *sym_del3 = dlsym(RTLD_DEFAULT, "_AnoSDKDelReportData3");
+    if (sym_del3) MSHookFunction(sym_del3, (void *)null_void, NULL);
+
+    void *sym_del4 = dlsym(RTLD_DEFAULT, "_AnoSDKDelReportData4");
+    if (sym_del4) MSHookFunction(sym_del4, (void *)null_void, NULL);
 
     NSLog(@"[Titanium] Universal God Mode ACTIVATED.");
 }
