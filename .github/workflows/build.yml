@@ -1,4 +1,4 @@
-name: Build Titanium (Ldid Fix)
+name: Build Titanium Stealth
 
 on:
   workflow_dispatch:
@@ -13,41 +13,28 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 1. تثبيت Ldid (أداة التوقيع الضرورية)
       - name: Install Ldid
-        run: |
-          brew install ldid
-          echo "Ldid installed successfully."
+        run: brew install ldid
 
-      # 2. تثبيت Theos و SDKs يدوياً
-      - name: Manual Install Theos & SDKs
+      - name: Setup Theos & SDKs
         run: |
           export THEOS=~/theos
           echo "THEOS=~/theos" >> $GITHUB_ENV
-          
-          # استنساخ Theos
+          # تحميل Theos و SDKs يدوياً لضمان الاستقرار
           git clone --recursive https://github.com/theos/theos.git $THEOS
-          
-          # استنساخ SDKs (حذف القديم إن وجد لضمان النظافة)
           rm -rf $THEOS/sdks
           git clone --depth 1 https://github.com/theos/sdks.git $THEOS/sdks
-          
-          echo "Theos setup complete."
 
-      # 3. بناء الأداة
       - name: Build Tweak
         run: |
           export THEOS=~/theos
-          
           make clean
-          # نتجاهل الأخطاء البسيطة ونبني للنهاية
           make package FINALPACKAGE=1 DEBUG=0 MESSAGES=0
 
-      # 4. رفع الملفات
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Titanium_Dylib
+          name: Titanium_Files
           path: |
             packages/*.deb
             .theos/obj/debug/*.dylib
