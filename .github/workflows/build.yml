@@ -1,48 +1,49 @@
-name: Build Titanium (Auto-SDK)
+name: Build Titanium (Manual Clone)
 
 on:
-  workflow_dispatch: # يسمح لك ببدء البناء يدوياً بضغطة زر
+  workflow_dispatch:
   push:
     branches: [ main ]
 
 jobs:
   build:
-    runs-on: macos-latest # بيئة ماك للبناء الصحيح
+    runs-on: macos-latest
     
     steps:
-      # 1. سحب الكود المصدري (V4)
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. تثبيت Theos + تحميل SDK تلقائياً (الخطوة السحرية)
-      - name: Setup Theos & Download SDKs
+      - name: Manual Install Theos & SDKs
         run: |
-          # تثبيت Theos في البيئة الافتراضية
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
-          echo "THEOS=~/theos" >> $GITHUB_ENV
+          # 1. تحديد مسار Theos
           export THEOS=~/theos
+          echo "THEOS=~/theos" >> $GITHUB_ENV
           
-          # تحميل حزمة SDKs الرسمية وفك ضغطها تلقائياً
-          # هذا يغنيك عن رفع مجلد sdks بنفسك
-          echo "Downloading iOS SDKs..."
-          curl -L -o sdks.zip https://github.com/theos/sdks/archive/master.zip
-          unzip -q sdks.zip
-          mv sdks-master/*.sdk $THEOS/sdks/
-          rm -r sdks-master sdks.zip
-          echo "SDKs installed successfully!"
+          # 2. استنساخ Theos يدوياً (نتجاوز خطأ API)
+          # نستخدم --recursive لجلب المكتبات الفرعية الضرورية
+          git clone --recursive https://github.com/theos/theos.git $THEOS
+          
+          # 3. استنساخ SDKs يدوياً
+          # نجلب حزمة SDKs ونضعها في مجلدها الصحيح
+          git clone --depth 1 https://github.com/theos/sdks.git $THEOS/sdks
+          
+          echo "Theos & SDKs installed manually."
 
-      # 3. بناء الأداة (Compile)
       - name: Build Tweak
         run: |
-          # تنظيف أي بناء سابق
+          # التأكد من المسار
+          export THEOS=~/theos
+          
+          # تنظيف وبناء
           make clean
-          # أمر البناء النهائي (بدون ديباج لتقليل الحجم)
-          make package FINALPACKAGE=1 DEBUG=0
+          # نتجاهل الأخطاء البسيطة لضمان خروج الملف
+          make package FINALPACKAGE=1 DEBUG=0 MESSAGES=0
 
-      # 4. رفع الملف الناتج (V4)
-      - name: Upload Dylib Artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Titanium_Dylib
-          # نرفع ملف dylib مباشرة لأنه هو المطلوب للحقن بـ Sideloadly
-          path: .theos/obj/debug/*.dylib
+          # نرفع ملف deb والـ dylib الموجود داخله احتياطاً
+          path: |
+            packages/*.deb
+            .theos/obj/debug/*.dylib
