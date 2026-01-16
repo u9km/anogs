@@ -1,4 +1,4 @@
-name: Build Titanium (Force Fix)
+name: Build Titanium (Ldid Fix)
 
 on:
   workflow_dispatch:
@@ -13,33 +13,37 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Theos & SDKs (Force Mode)
+      # 1. تثبيت Ldid (أداة التوقيع الضرورية)
+      - name: Install Ldid
         run: |
-          # 1. تحديد المسار
+          brew install ldid
+          echo "Ldid installed successfully."
+
+      # 2. تثبيت Theos و SDKs يدوياً
+      - name: Manual Install Theos & SDKs
+        run: |
           export THEOS=~/theos
           echo "THEOS=~/theos" >> $GITHUB_ENV
           
-          # 2. تحميل Theos الأساسي
+          # استنساخ Theos
           git clone --recursive https://github.com/theos/theos.git $THEOS
           
-          # 3. (الحل السحري) حذف مجلد SDKs الفارغ الذي أنشأه Theos
-          # هذا السطر يحل مشكلة "already exists"
+          # استنساخ SDKs (حذف القديم إن وجد لضمان النظافة)
           rm -rf $THEOS/sdks
-          
-          # 4. تحميل SDKs الآن في مكان نظيف
           git clone --depth 1 https://github.com/theos/sdks.git $THEOS/sdks
           
-          echo "Theos installed with SDKs successfully!"
+          echo "Theos setup complete."
 
+      # 3. بناء الأداة
       - name: Build Tweak
         run: |
           export THEOS=~/theos
           
-          # تنظيف وبناء
           make clean
-          # استخدام MESSAGES=0 لتقليل الضجيج في اللوج
+          # نتجاهل الأخطاء البسيطة ونبني للنهاية
           make package FINALPACKAGE=1 DEBUG=0 MESSAGES=0
 
+      # 4. رفع الملفات
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
