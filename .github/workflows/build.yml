@@ -1,0 +1,28 @@
+name: Build Titanium God Mode
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Theos
+        run: |
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          echo "THEOS=~/theos" >> $GITHUB_ENV
+
+      - name: Build Tweak
+        run: |
+          make package FINALPACKAGE=1 DEBUG=0
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Titanium_Dylib
+          path: .theos/obj/debug/*.dylib
