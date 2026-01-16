@@ -1,76 +1,58 @@
-#import "fishhook.h"
 #import <UIKit/UIKit.h>
 #import <substrate.h>
 #import <mach-o/dyld.h>
 #import <dlfcn.h>
-#import <sys/socket.h>
-#import <netdb.h>
 #import <dispatch/dispatch.h>
 
-// --- إعدادات التشفير (XOR) ---
-#define XOR_KEY 0x5A
+// ============================================================================
+//  TITANIUM V17: FULL CIPHER & FRAMEWORK EDITION (NON-JB)
+//  Strategy: Late Encryption + Dynamic Symbol Hunting
+// ============================================================================
 
-void xor_crypt(char *str, size_t len) {
+// --- 1. محرك فك التشفير (XOR Engine) ---
+#define CIPHER_KEY 0x3F
+
+void decrypt_string(char *str, size_t len) {
     for (size_t i = 0; i < len; i++) {
-        str[i] ^= XOR_KEY;
+        str[i] ^= CIPHER_KEY;
     }
 }
 
-// --- نظام فحص مصدر الاستدعاء ---
-bool is_untrusted_caller() {
-    void *return_addr = __builtin_return_address(0);
-    Dl_info info;
-    if (dladdr(return_addr, &info) && info.dli_fname) {
-        // تشفير "anogs" -> (Key 0x5A)
-        char target[] = {0x3B, 0x34, 0x35, 0x3D, 0x29, 0x00};
-        xor_crypt(target, 5);
-        if (strstr(info.dli_fname, target)) return true;
-    }
-    return false;
-}
+// --- 2. بدائل الدوال (Safe Replacements) ---
+void* safe_return_null(void) { return NULL; }
+void safe_return_void(void) { return; }
 
-// --- تعريف الدوال الأصلية للهوك الشبحي (Fishhook) ---
-static int (*orig_connect)(int, const struct sockaddr *, socklen_t);
-static void (*orig_abort)(void);
-static int (*orig_getaddrinfo)(const char *, const char *, const struct addrinfo *, struct addrinfo **);
-
-// --- الدوال البديلة ---
-int my_connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
-    if (is_untrusted_caller()) return -1;
-    return orig_connect(sockfd, addr, addrlen);
-}
-
-void my_abort(void) {
-    if (is_untrusted_caller()) return;
-    orig_abort();
-}
-
-int my_getaddrinfo(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res) {
-    if (is_untrusted_caller()) return EAI_FAIL;
-    return orig_getaddrinfo(node, service, hints, res);
-}
-
-// --- تفعيل نظام التخفي ---
-void Apply_Stealth_Bypass() {
-    // استخدام Fishhook لإعادة ربط رموز النظام (أقوى حماية)
-    struct rebinding rebindings[] = {
-        {"connect", (void *)my_connect, (void **)&orig_connect},
-        {"abort", (void *)my_abort, (void **)&orig_abort},
-        {"getaddrinfo", (void *)my_getaddrinfo, (void **)&orig_getaddrinfo}
-    };
-    rebind_symbols(rebindings, 3);
-
-    // البحث الديناميكي عن دوال الحماية الإضافية
-    const char* symbols[] = {"_AnoSDKGetReportData2", "ACE_Init"};
+// --- 3. المحقن المشفر (Cipher Injector) ---
+void Start_Integrated_Protection() {
+    
+    // مصفوفة تحتوي على أسماء الدوال مشفرة لكي لا تكتشفها اللعبة بالفحص النصي
+    // سنستخدم dlsym للبحث عنها وقت التشغيل فقط
+    
+    // 1. "_AnoSDKGetReportData2"
+    char s1[] = {0x60, 0x7E, 0x51, 0x50, 0x6C, 0x7B, 0x74, 0x78, 0x58, 0x54, 0x41, 0x6D, 0x54, 0x41, 0x50, 0x4D, 0x4B, 0x7B, 0x54, 0x43, 0x5E, 0x0D, 0x00};
+    decrypt_string(s1, 22);
+    
+    // 2. "ACE_Init"
+    char s2[] = {0x7E, 0x7C, 0x7A, 0x60, 0x76, 0x51, 0x56, 0x4B, 0x00};
+    decrypt_string(s2, 8);
+    
+    const char* targets[] = {s1, s2};
+    
     for (int i = 0; i < 2; i++) {
-        void *addr = dlsym(RTLD_DEFAULT, symbols[i]);
-        if (addr) MSHookFunction(addr, (void *)NULL, NULL);
+        void *addr = dlsym(RTLD_DEFAULT, targets[i]);
+        if (addr != NULL) {
+            MSHookFunction(addr, (void *)safe_return_null, NULL);
+        }
     }
+    
+    NSLog(@"[Titanium] Integrated Protection Deployed.");
 }
 
-// --- المحقن الرئيسي (مع تأخير 5 ثوانٍ) ---
-%ctor {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        Apply_Stealth_Bypass();
+// --- 4. المحقن الرئيسي (Constructer with Safe Delay) ---
+// استخدام constructor لضمان التحميل عند حقن الفريمورك
+static __attribute__((constructor)) void startup() {
+    // تأخير 10 ثوانٍ كاملة لضمان تخطي فحص الحماية الأولي واستقرار الفريمورك
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        Start_Integrated_Protection();
     });
 }
