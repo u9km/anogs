@@ -1,0 +1,9 @@
+Package: com.muntadhar.titanium
+Name: AnogsTitanium
+Version: 5.0.0
+Architecture: iphoneos-arm
+Description: God Mode Bypass (No-JB)
+Maintainer: Muntadhar
+Author: Muntadhar
+Section: Tweaks
+Depends: mobilesubstrate
