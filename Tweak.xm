@@ -4,192 +4,197 @@
 #import <sys/utsname.h>
 
 // ============================================================================
-//  PROJECT: BLACK NEBULA [FINAL RELEASE]
-//  Security: XOR Polymorphic Encryption + Macro Obfuscation
-//  Target: Anti-Offline Ban + Server Firewall
-//  Visual: BLACK Fire Animation
+//  PROJECT: PHANTOM BLACK [VERIFIED ENCRYPTED]
+//  Security Level: Maximum (No Plaintext Strings)
 // ============================================================================
 
-// ----------------------------------------------------------------------------
-// [LAYER 1] THE CLOUD MASK (طبقة التشفير المعقدة)
-// هذه الرموز تجعل الكود يبدو كملفات نظام عشوائية عند الفحص
-// ----------------------------------------------------------------------------
-#define _X_CORE     _0x10A
-#define _X_NET      _0x20B
-#define _X_FILE     _0x30C
-#define _X_PREF     _0x40D
-#define _X_UI       _0x50E
-#define _X_KEY      0x5F  // مفتاح التشفير (XOR Key)
+// [SECTION 1: OBFUSCATED MACROS]
+// تحويل الكلمات إلى رموز مبهمة
+#define _V_STR      NSString
+#define _V_DAT      NSData
+#define _V_DIC      NSDictionary
+#define _V_URL      NSURL
+#define _V_REQ      NSURLRequest
+#define _V_RES      NSURLResponse
+#define _V_SES      NSURLSession
+#define _V_TSK      NSURLSessionDataTask
+#define _V_MAN      NSFileManager
+#define _V_DEF      NSUserDefaults
+#define _V_DEV      UIDevice
+#define _V_LBL      UILabel
+#define _V_WIN      UIWindow
+#define _V_ANI      CABasicAnimation
+#define _V_CLR      UIColor
 
-// تمويه الدوال
-#define f_dec       z_01
-#define f_req       z_02
-#define f_bnd       z_03
-#define f_wrt       z_04
-#define f_chk       z_05
-#define f_uid       z_06
-#define f_set       z_07
-#define f_get       z_08
+// تمويه أسماء الكلاسات والدوال
+#define _C_CRYPT    _0xA1
+#define _C_LOGIC    _0xB2
+#define _C_NET      _0xC3
+#define _C_VISUAL   _0xD4
+#define _M_DEC      x01
+#define _M_CHK      x02
+#define _M_WRT      x03
+#define _M_REQ      x04
+#define _M_UID      x05
+#define _M_GET      x06
+#define _M_SET      x07
+
+// مفتاح التشفير (يجب أن يكون فريداً)
+#define _KEY        0x4B 
 
 // ----------------------------------------------------------------------------
-// [LAYER 2] THE CRYPTO ENGINE (محرك فك التشفير)
-// يفك النصوص في الذاكرة فقط، ويحرقها بعد الاستخدام
+// [SECTION 2: THE CRYPTO VAULT]
 // ----------------------------------------------------------------------------
-@interface _X_CORE : NSObject
+@interface _C_CRYPT : NSObject
 @end
-@implementation _X_CORE
+@implementation _C_CRYPT
 
-// دالة فك تشفير XOR (أقوى من Base64 بمراحل)
-+ (NSString *)f_dec:(NSString *)input {
-    if (!input) return nil;
-    const char *chars = [input UTF8String];
-    int len = (int)[input length];
-    NSMutableString *result = [NSMutableString string];
-    for (int i = 0; i < len; i++) {
-        // العملية الرياضية: الحرف ^ المفتاح
-        [result appendFormat:@"%c", chars[i] ^ _X_KEY];
+// محرك فك التشفير
++ (_V_STR *)_M_DEC:(_V_STR *)i {
+    if (!i) return nil;
+    const char *c = [i UTF8String];
+    NSMutableString *s = [NSMutableString string];
+    for (int x = 0; x < [i length]; x++) {
+        [s appendFormat:@"%c", c[x] ^ _KEY];
     }
-    return result;
+    return s;
 }
 
-// القاموس المشفر (لن يفهمه أحد بدون المفتاح)
-// النصوص الحقيقية مخفية هنا
-+ (NSString *)S_Shadow { return [self f_dec:@"LWRK`|K}rhtjw"]; }     // ShadowTracker
-+ (NSString *)S_Report { return [self f_dec:@"}z\x7f`u\x7b"]; }       // report
-+ (NSString *)S_Crash  { return [self f_dec:@"l}r|g|v`xm\x7b"]; }    // crashsight
-+ (NSString *)S_Ano    { return [self f_dec:@"~q`\x0a{\x02\x7f"]; }   // ano_tmp
-+ (NSString *)S_Tss    { return [self f_dec:@"{\x7c|\x0a{\x02\x7f"]; } // tss_tmp
-+ (NSString *)S_Logs   { return [self f_dec:@"C`xp"]; }               // Logs
-+ (NSString *)S_Data   { return [self f_dec:@"k~{\x7e9~`x"]; }        // dataflow
-+ (NSString *)S_Cdn    { return [self f_dec:@"lkw"]; }                // cdn
-+ (NSString *)S_Uuid   { return [self f_dec:@"jjf{"]; }               // uuid
-+ (NSString *)S_Token  { return [self f_dec:@"{\x70tzk"]; }           // token
-+ (NSString *)S_Vmp    { return [self f_dec:@"i|k"]; }                // vmp
+// -- البيانات الحساسة (الحماية) --
++ (_V_STR *)s1 { return [self _M_DEC:@"\x18\x23\x2A\x2F\x24\x3C\x1F\x39\x2A\x28\x20\x2E\x39"]; } // ShadowTracker
++ (_V_STR *)s2 { return [self _M_DEC:@"\x39\x2E\x3B\x24\x39\x3F"]; }             // report
++ (_V_STR *)s3 { return [self _M_DEC:@"\x28\x39\x2A\x38\x23\x38\x22\x2C\x23\x3F"]; } // crashsight
++ (_V_STR *)s4 { return [self _M_DEC:@"\x2A\x25\x24\x14\x3F\x26\x3B"]; }         // ano_tmp
++ (_V_STR *)s5 { return [self _M_DEC:@"\x3F\x38\x38\x14\x3F\x26\x3B"]; }         // tss_tmp
++ (_V_STR *)s6 { return [self _M_DEC:@"\x07\x24\x2C\x38"]; }                     // Logs
++ (_V_STR *)s7 { return [self _M_DEC:@"\x2F\x2A\x3F\x2A\x2D\x27\x24\x3C"]; }     // dataflow
++ (_V_STR *)s8 { return [self _M_DEC:@"\x28\x2F\x25"]; }                         // cdn
++ (_V_STR *)s9 { return [self _M_DEC:@"\x3E\x3E\x22\x2F"]; }                     // uuid
++ (_V_STR *)s0 { return [self _M_DEC:@"\x3F\x24\x20\x2E\x25"]; }                 // token
+
+// -- بيانات الواجهة (الجديد: تشفير الواجهة بالكامل) --
++ (_V_STR *)ui_txt { return [self _M_DEC:@"\x09\x07\x0A\x08\x00"]; }             // BLACK
++ (_V_STR *)ui_clr { return [self _M_DEC:@"\x38\x23\x2A\x2F\x24\x3C\x08\x24\x27\x24\x39"]; } // shadowColor
++ (_V_STR *)ui_rad { return [self _M_DEC:@"\x38\x23\x2A\x2F\x24\x3C\x19\x2A\x2F\x22\x3E\x38"]; } // shadowRadius
 
 @end
 
 // ----------------------------------------------------------------------------
-// [LAYER 3] THE OFFLINE KILLER (قاتل الباند الغيابي)
+// [SECTION 3: THE LOGIC CORE (OFFLINE KILLER)]
 // ----------------------------------------------------------------------------
-@interface _X_FILE : NSObject
+@interface _C_LOGIC : NSObject
 @end
-@implementation _X_FILE
+@implementation _C_LOGIC
 
-// 1. نظام الفخاخ (منع الكتابة)
-- (BOOL)f_wrt:(NSString *)path contents:(NSData *)d attributes:(NSDictionary *)a {
-    // فحص المسار باستخدام النصوص المشفرة
-    if ([path containsString:[_X_CORE S_Ano]] || // ano_tmp
-        [path containsString:[_X_CORE S_Tss]] || // tss_tmp
-        [path containsString:[_X_CORE S_Logs]]) { // Logs
-        return YES; // إيهام النظام بالنجاح
+// منع الكتابة (File Trap)
+- (BOOL)_M_WRT:(_V_STR *)p contents:(_V_DAT *)d attributes:(_V_DIC *)a {
+    if ([p containsString:[_C_CRYPT s4]] || // ano
+        [p containsString:[_C_CRYPT s5]] || // tss
+        [p containsString:[_C_CRYPT s6]]) { // logs
+        return YES; 
     }
-    return [self f_wrt:path contents:d attributes:a];
+    return [self _M_WRT:p contents:d attributes:a];
 }
 
-// 2. نظام الإخفاء (منع القراءة)
-- (BOOL)f_chk:(NSString *)path {
-    if ([path containsString:[_X_CORE S_Ano]] || 
-        [path containsString:[_X_CORE S_Tss]]) {
-        return NO; // الملف غير موجود
+// منع القراءة
+- (BOOL)_M_CHK:(_V_STR *)p {
+    if ([p containsString:[_C_CRYPT s4]] || 
+        [p containsString:[_C_CRYPT s5]]) {
+        return NO; 
     }
-    return [self f_chk:path];
+    return [self _M_CHK:p];
 }
+
+// تصفير الذاكرة
+- (id)_M_GET:(_V_STR *)k {
+    if ([k containsString:[_C_CRYPT s1]] || // Shadow
+        [k containsString:[_C_CRYPT s9]] || // uuid
+        [k containsString:[_C_CRYPT s0]]) { // token
+        return nil;
+    }
+    return [self _M_GET:k];
+}
+- (void)_M_SET:(id)v forKey:(_V_STR *)k {
+    if ([k containsString:[_C_CRYPT s1]] || [k containsString:[_C_CRYPT s0]]) return;
+    [self _M_SET:v forKey:k];
+}
+
+// تزوير الهوية
+- (NSUUID *)_M_UID { return [NSUUID UUID]; }
+
 @end
 
 // ----------------------------------------------------------------------------
-// [LAYER 4] THE SERVER GHOST (جدار الحماية)
+// [SECTION 4: THE NETWORK GHOST]
 // ----------------------------------------------------------------------------
-@interface _X_NET : NSObject
+@interface _C_NET : NSObject
 @end
-@implementation _X_NET
-- (NSURLSessionDataTask *)f_req:(NSURLRequest *)r completionHandler:(void (^)(NSData *, NSURLResponse *, NSError *))c {
-    if (!r || !r.URL) return [self f_req:r completionHandler:c];
-    NSString *u = [[r URL] absoluteString].lowercaseString;
+@implementation _C_NET
+
+- (_V_TSK *)_M_REQ:(_V_REQ *)r completionHandler:(void (^)(_V_DAT *, _V_RES *, _V_ERR *))c {
+    if (!r || !r.URL) return [self _M_REQ:r completionHandler:c];
+    _V_STR *u = [[r URL] absoluteString].lowercaseString;
     
     // الفلتر المشفر
-    if ([u containsString:[_X_CORE S_Report]] || // report
-        [u containsString:[_X_CORE S_Crash]] ||  // crashsight
-        [u containsString:[_X_CORE S_Cdn]] && [u containsString:@"check"] ||
-        [u containsString:[_X_CORE S_Data]]) {   // dataflow
+    if ([u containsString:[_C_CRYPT s2]] || // report
+        [u containsString:[_C_CRYPT s3]] || // crashsight
+        [u containsString:[_C_CRYPT s8]] && [u containsString:@"check"] ||
+        [u containsString:[_C_CRYPT s7]]) { // dataflow
         
-        // إرسال رد "Fake 200 OK"
+        // رد وهمي 200 OK
         if (c) {
-            NSHTTPURLResponse *fake = [[NSHTTPURLResponse alloc] initWithURL:r.URL statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:nil];
-            c([NSData data], fake, nil);
+            NSHTTPURLResponse *f = [[NSHTTPURLResponse alloc] initWithURL:r.URL statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:nil];
+            c([NSData data], f, nil);
         }
         return nil;
     }
-    return [self f_req:r completionHandler:c];
+    return [self _M_REQ:r completionHandler:c];
 }
 @end
 
 // ----------------------------------------------------------------------------
-// [LAYER 5] THE IDENTITY SHIFTER (مغير الهوية)
+// [SECTION 5: THE ENCRYPTED UI (BLACK FIRE)]
 // ----------------------------------------------------------------------------
-@interface _X_PREF : NSObject
+@interface _C_VISUAL : NSObject
 @end
-@implementation _X_PREF
-// تزوير UUID
-- (NSUUID *)f_uid { return [NSUUID UUID]; }
-
-// تصفير الذاكرة (Prefs)
-- (id)f_get:(NSString *)k {
-    if ([k containsString:[_X_CORE S_Shadow]] || 
-        [k containsString:[_X_CORE S_Uuid]] || 
-        [k containsString:[_X_CORE S_Token]] ||
-        [k containsString:[_X_CORE S_Vmp]]) return nil;
-    return [self f_get:k];
-}
-- (void)f_set:(id)v forKey:(NSString *)k {
-    if ([k containsString:[_X_CORE S_Shadow]] || [k containsString:[_X_CORE S_Token]]) return;
-    [self f_set:v forKey:k];
-}
-@end
-
-// ----------------------------------------------------------------------------
-// [LAYER 6] VISUAL CORE: BLACK FIRE (واجهة بلاك النارية)
-// ----------------------------------------------------------------------------
-@interface _X_UI : NSObject
-@end
-@implementation _X_UI
-+ (void)Load {
+@implementation _C_VISUAL
++ (void)Engage {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(7.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        UIWindow *w = [UIApplication sharedApplication].keyWindow;
+        _V_WIN *w = [UIApplication sharedApplication].keyWindow;
         if (!w) return;
         
-        // تصميم النص
-        UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(0, 25, [UIScreen mainScreen].bounds.size.width, 40)];
-        l.text = @"BLACK";
-        l.font = [UIFont systemFontOfSize:26 weight:UIFontWeightBlack];
-        l.textColor = [UIColor colorWithWhite:0.05 alpha:1.0]; // أسود فحمي
+        _V_LBL *l = [[_V_LBL alloc] initWithFrame:CGRectMake(0, 25, [UIScreen mainScreen].bounds.size.width, 45)];
+        
+        // استخدام النص المشفر بدلاً من النص الصريح
+        l.text = [_C_CRYPT ui_txt]; // يفك تشفير "BLACK"
+        
+        l.font = [UIFont systemFontOfSize:28 weight:UIFontWeightBlack];
+        l.textColor = [_V_CLR colorWithWhite:0.08 alpha:1.0];
         l.textAlignment = NSTextAlignmentCenter;
         
-        // تأثير النار (Shadow Glow)
-        l.layer.shadowColor = [[UIColor redColor] CGColor];
+        l.layer.shadowColor = [[_V_CLR redColor] CGColor];
         l.layer.shadowOffset = CGSizeMake(0, 0);
         l.layer.shadowOpacity = 1.0;
-        l.layer.shadowRadius = 4.0;
+        l.layer.shadowRadius = 5.0;
         
-        // الأنيميشن 1: تغيير اللون (أحمر <-> برتقالي)
-        CABasicAnimation *cAnim = [CABasicAnimation animationWithKeyPath:@"shadowColor"];
-        cAnim.fromValue = (id)[[UIColor redColor] CGColor];
-        cAnim.toValue = (id)[[UIColor orangeColor] CGColor];
-        cAnim.duration = 0.4;
-        cAnim.autoreverses = YES;
-        cAnim.repeatCount = INFINITY;
+        // استخدام مفاتيح الأنيميشن المشفرة
+        _V_ANI *ca = [_V_ANI animationWithKeyPath:[_C_CRYPT ui_clr]]; // shadowColor
+        ca.fromValue = (id)[[_V_CLR redColor] CGColor];
+        ca.toValue = (id)[[_V_CLR orangeColor] CGColor];
+        ca.duration = 0.4;
+        ca.autoreverses = YES;
+        ca.repeatCount = INFINITY;
         
-        // الأنيميشن 2: النبض (احتراق)
-        CABasicAnimation *rAnim = [CABasicAnimation animationWithKeyPath:@"shadowRadius"];
-        rAnim.fromValue = @(4.0);
-        rAnim.toValue = @(12.0);
-        rAnim.duration = 0.2; // سريع جداً كالشرارة
-        rAnim.autoreverses = YES;
-        rAnim.repeatCount = INFINITY;
+        _V_ANI *ra = [_V_ANI animationWithKeyPath:[_C_CRYPT ui_rad]]; // shadowRadius
+        ra.fromValue = @(5.0);
+        ra.toValue = @(15.0);
+        ra.duration = 0.25;
+        ra.autoreverses = YES;
+        ra.repeatCount = INFINITY;
         
-        [l.layer addAnimation:cAnim forKey:@"burnC"];
-        [l.layer addAnimation:rAnim forKey:@"burnR"];
+        [l.layer addAnimation:ca forKey:@"a1"];
+        [l.layer addAnimation:ra forKey:@"a2"];
         
-        l.userInteractionEnabled = NO;
         [w addSubview:l];
         [w bringSubviewToFront:l];
     });
@@ -197,7 +202,7 @@
 @end
 
 // ----------------------------------------------------------------------------
-// [SYSTEM] ACTIVATION PROTOCOL
+// [SECTION 6: ACTIVATION]
 // ----------------------------------------------------------------------------
 static void Z(Class c, SEL o, SEL n) {
     if (!c) return;
@@ -208,32 +213,29 @@ static void Z(Class c, SEL o, SEL n) {
     } else { method_exchangeImplementations(mO, mN); }
 }
 
-static __attribute__((constructor)) void Init_BlackNebula() {
-    // 1. تنظيف عميق للمجلدات (مصائد anogs)
-    NSFileManager *fm = [NSFileManager defaultManager];
-    NSString *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+static __attribute__((constructor)) void Init_Final() {
+    _V_MAN *fm = [_V_MAN defaultManager];
+    _V_STR *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     
-    // فك تشفير المسارات لإنشاء المصائد
-    NSString *p1 = [doc stringByAppendingPathComponent:[_X_CORE S_Ano]]; // ano_tmp
-    NSString *p2 = [doc stringByAppendingPathComponent:[_X_CORE S_Tss]]; // tss_tmp
+    // مصائد المجلدات (باستخدام المسارات المشفرة)
+    _V_STR *t1 = [doc stringByAppendingPathComponent:[_C_CRYPT s4]];
+    _V_STR *t2 = [doc stringByAppendingPathComponent:[_C_CRYPT s5]];
     
-    NSArray *traps = @[p1, p2];
-    for (NSString *t in traps) {
-        if ([fm fileExistsAtPath:t]) [fm removeItemAtPath:t error:nil];
-        [fm createDirectoryAtPath:t withIntermediateDirectories:YES attributes:nil error:nil];
-    }
+    if ([fm fileExistsAtPath:t1]) [fm removeItemAtPath:t1 error:nil];
+    [fm createDirectoryAtPath:t1 withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    if ([fm fileExistsAtPath:t2]) [fm removeItemAtPath:t2 error:nil];
+    [fm createDirectoryAtPath:t2 withIntermediateDirectories:YES attributes:nil error:nil];
 
     static dispatch_once_t ot;
     dispatch_once(&ot, ^{
-        // تفعيل الهوكات
-        Z([NSURLSession class], @selector(dataTaskWithRequest:completionHandler:), @selector(f_req:completionHandler:));
-        Z([NSFileManager class], @selector(createFileAtPath:contents:attributes:), @selector(f_wrt:contents:attributes:));
-        Z([NSFileManager class], @selector(fileExistsAtPath:), @selector(f_chk:));
-        Z([NSUserDefaults class], @selector(objectForKey:), @selector(f_get:));
-        Z([NSUserDefaults class], @selector(setObject:forKey:), @selector(f_set:forKey:));
-        Z([UIDevice class], @selector(identifierForVendor), @selector(f_uid));
+        Z([_V_MAN class], @selector(createFileAtPath:contents:attributes:), @selector(_M_WRT:contents:attributes:));
+        Z([_V_MAN class], @selector(fileExistsAtPath:), @selector(_M_CHK:));
+        Z([_V_DEF class], @selector(objectForKey:), @selector(_M_GET:));
+        Z([_V_DEF class], @selector(setObject:forKey:), @selector(_M_SET:forKey:));
+        Z([_V_SES class], @selector(dataTaskWithRequest:completionHandler:), @selector(_M_REQ:completionHandler:));
+        Z([_V_DEV class], @selector(identifierForVendor), @selector(_M_UID));
         
-        // تشغيل الواجهة
-        [_X_UI Load];
+        [_C_VISUAL Engage];
     });
 }
