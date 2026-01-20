@@ -4,10 +4,10 @@ GO_EASY_ON_ME = 1
 DEBUG = 0
 FINALPACKAGE = 1
 
-TWEAK_NAME = TitaniumInfinity
-TitaniumInfinity_FILES = Tweak.xm
-TitaniumInfinity_FRAMEWORKS = UIKit Foundation Security
-TitaniumInfinity_CFLAGS = -fobjc-arc -Wno-deprecated-declarations -O3
+TWEAK_NAME = TitaniumPhantom
+TitaniumPhantom_FILES = Tweak.xm
+TitaniumPhantom_FRAMEWORKS = UIKit Foundation Security
+TitaniumPhantom_CFLAGS = -fobjc-arc -Wno-deprecated-declarations -O3
 
 include $(THEOS)/makefiles/common.mk
 include $(THEOS_MAKE_PATH)/tweak.mk
