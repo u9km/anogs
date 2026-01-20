@@ -1,0 +1,12 @@
+{
+    Filter = {
+        Bundles = (
+            "com.tencent.ig",          // العالمية
+            "com.pubg.krmobile",       // الكورية
+            "com.vng.pubgmobile",      // الفيتنامية
+            "com.rekoo.pubgm",         // التايوانية
+            "com.pubg.imobile",        // الهندية
+            "com.tencent.tmgp.pubgmhd" // الصينية
+        );
+    };
+}
