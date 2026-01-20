@@ -3,42 +3,38 @@
 #import <QuartzCore/QuartzCore.h>
 #import <sys/utsname.h>
 
-#define _V_STR NSString
-#define _V_DAT NSData
-#define _V_DIC NSDictionary
-#define _V_URL NSURL
-#define _V_REQ NSURLRequest
-#define _V_RES NSURLResponse
-#define _V_ERR NSError
-#define _V_SES NSURLSession
-#define _V_TSK NSURLSessionDataTask
-#define _V_MAN NSFileManager
-#define _V_DEF NSUserDefaults
-#define _V_DEV UIDevice
-#define _V_LBL UILabel
-#define _V_WIN UIWindow
-#define _V_ANI CABasicAnimation
-#define _V_CLR UIColor
+#define _V_STR id
+#define _V_DAT id
+#define _V_REQ id
+#define _V_SES id
+#define _V_MAN id
+#define _V_DEF id
+#define _V_BUN id
+#define _V_LBL id
+#define _V_WIN id
+#define _V_ANI id
+#define _V_CLR id
 
-#define _C_CRYPT _0xA1
-#define _C_LOGIC _0xB2
-#define _C_NET _0xC3
-#define _C_VISUAL _0xD4
-#define _M_DEC x01
-#define _M_CHK x02
-#define _M_WRT x03
-#define _M_REQ x04
-#define _M_UID x05
-#define _M_GET x06
-#define _M_SET x07
+#define _C_CRYPT    _0xFA
+#define _C_SOVEREIGN _0xFB
+#define _C_VISUAL   _0xFC
 
-#define _KEY 0x4B 
+#define _M_DEC      m01
+#define _M_CHK      m02
+#define _M_WRT      m03
+#define _M_REQ      m04
+#define _M_UID      m05
+#define _M_GET      m06
+#define _M_SET      m07
+#define _M_BID      m08
+#define _M_PFR      m09
+
+#define _KEY        0xE2 // مفتاح تشفير سيادي جديد
 
 @interface _C_CRYPT : NSObject
 @end
 @implementation _C_CRYPT
-
-+ (_V_STR *)_M_DEC:(_V_STR *)i {
++ (NSString *)_M_DEC:(NSString *)i {
     if (!i) return nil;
     const char *c = [i UTF8String];
     NSMutableString *s = [NSMutableString string];
@@ -48,119 +44,78 @@
     return s;
 }
 
-+ (_V_STR *)s1 { return [self _M_DEC:@"\x18\x23\x2A\x2F\x24\x3C\x1F\x39\x2A\x28\x20\x2E\x39"]; }
-+ (_V_STR *)s2 { return [self _M_DEC:@"\x39\x2E\x3B\x24\x39\x3F"]; }
-+ (_V_STR *)s3 { return [self _M_DEC:@"\x28\x39\x2A\x38\x23\x38\x22\x2C\x23\x3F"]; }
-+ (_V_STR *)s4 { return [self _M_DEC:@"\x2A\x25\x24\x14\x3F\x26\x3B"]; }
-+ (_V_STR *)s5 { return [self _M_DEC:@"\x3F\x38\x38\x14\x3F\x26\x3B"]; }
-+ (_V_STR *)s6 { return [self _M_DEC:@"\x07\x24\x2C\x38"]; }
-+ (_V_STR *)s7 { return [self _M_DEC:@"\x2F\x2A\x3F\x2A\x2D\x27\x24\x3C"]; }
-+ (_V_STR *)s8 { return [self _M_DEC:@"\x28\x2F\x25"]; }
-+ (_V_STR *)s9 { return [self _M_DEC:@"\x3E\x3E\x22\x2F"]; }
-+ (_V_STR *)s0 { return [self _M_DEC:@"\x3F\x24\x20\x2E\x25"]; }
-+ (_V_STR *)ui_txt { return [self _M_DEC:@"\x09\x07\x0A\x08\x00"]; }
-+ (_V_STR *)ui_clr { return [self _M_DEC:@"\x38\x23\x2A\x2F\x24\x3C\x08\x24\x27\x24\x39"]; }
-+ (_V_STR *)ui_rad { return [self _M_DEC:@"\x38\x23\x2A\x2F\x24\x3C\x19\x2A\x2F\x22\x3E\x38"]; }
-
+// تشفير البيانات الحساسة المكتشفة في سجلات الشهادة
++ (_V_STR)s1 { return [self _M_DEC:@"\x91\x9A\x93\x96\x9D\x85\xAC\x80\x93\x9F\x97\x89\x80"]; } // ShadowTracker
++ (_V_STR)s2 { return [self _M_DEC:@"\x83\x8C\x8D\xAD\x96\x8F\x92"]; }               // ano_tmp
++ (_V_STR)s3 { return [self _M_DEC:@"\x96\x91\x91\xAD\x96\x8F\x92"]; }               // tss_tmp
++ (_V_STR)s4 { return [self _M_DEC:@"\x81\x8D\x8F\x9C\x96\x87\x8C\x81\x87\x8C\x96\x9C\x8B\x85"]; } // com.tencent.ig
++ (_V_STR)s5 { return [self _M_DEC:@"\x87\x8F\x80\x87\x86\x86\x87\x86"]; }           // embedded
++ (_V_STR)s6 { return [self _M_DEC:@"\x8F\x8D\x80\x8B\x8E\x87\x92\x90\x8D\x94\x8B\x91\x8B\x87\x86"]; } // mobileprovision
++ (_V_STR)s7 { return [self _M_DEC:@"\x90\x87\x92\x8D\x90\x96"]; }               // report
++ (_V_STR)s8 { return [self _M_DEC:@"\x81\x90\x83\x91\x8A\x91\x8B\x85\x8A\x96"]; }     // crashsight
++ (_V_STR)ui { return [self _M_DEC:@"\x80\x8E\x83\x81\x89"]; }                       // BLACK
 @end
 
-@interface _C_LOGIC : NSObject
+@interface _C_SOVEREIGN : NSObject
 @end
-@implementation _C_LOGIC
+@implementation _C_SOVEREIGN
 
-- (BOOL)_M_WRT:(_V_STR *)p contents:(_V_DAT *)d attributes:(_V_DIC *)a {
-    if ([p containsString:[_C_CRYPT s4]] || 
-        [p containsString:[_C_CRYPT s5]] || 
-        [p containsString:[_C_CRYPT s6]]) { 
-        return YES; 
+// 1. حماية الشهادة (The Sovereign Shield)
+// تزوير الهوية وإخفاء ملف التوقيع تماماً
+- (NSString *)x_bid { return [_C_CRYPT s4]; }
+
+- (NSString *)x_pfr:(NSString *)n ofType:(NSString *)t {
+    if ([n isEqualToString:[_C_CRYPT s5]] && [t isEqualToString:[_C_CRYPT s6]]) {
+        return nil; // إرجاع "لا يوجد ملف شهادة"
     }
-    return [self _M_WRT:p contents:d attributes:a];
+    return [self x_pfr:n ofType:t];
 }
 
-- (BOOL)_M_CHK:(_V_STR *)p {
-    if ([p containsString:[_C_CRYPT s4]] || 
-        [p containsString:[_C_CRYPT s5]]) {
-        return NO; 
-    }
-    return [self _M_CHK:p];
+// 2. حماية النزاهة (Integrity Fix)
+- (BOOL)x_wrt:(NSString *)p contents:(NSData *)d attributes:(id)a {
+    if ([p containsString:[_C_CRYPT s2]] || [p containsString:[_C_CRYPT s3]]) return YES;
+    return [self x_wrt:p contents:d attributes:a];
 }
 
-- (id)_M_GET:(_V_STR *)k {
-    if ([k containsString:[_C_CRYPT s1]] || 
-        [k containsString:[_C_CRYPT s9]] || 
-        [k containsString:[_C_CRYPT s0]]) { 
-        return nil;
-    }
-    return [self _M_GET:k];
+- (BOOL)x_chk:(NSString *)p {
+    if ([p containsString:[_C_CRYPT s2]] || [p containsString:[_C_CRYPT s3]] || [p containsString:[_C_CRYPT s6]]) return NO;
+    return [self x_chk:p];
 }
 
-- (void)_M_SET:(id)v forKey:(_V_STR *)k {
-    if ([k containsString:[_C_CRYPT s1]] || [k containsString:[_C_CRYPT s0]]) return;
-    [self _M_SET:v forKey:k];
-}
-
-- (NSUUID *)_M_UID { return [NSUUID UUID]; }
-
-@end
-
-@interface _C_NET : NSObject
-@end
-@implementation _C_NET
-
-- (_V_TSK *)_M_REQ:(_V_REQ *)r completionHandler:(void (^)(_V_DAT *, _V_RES *, _V_ERR *))c {
-    if (!r || !r.URL) return [self _M_REQ:r completionHandler:c];
-    _V_STR *u = [[r URL] absoluteString].lowercaseString;
-    
-    if ([u containsString:[_C_CRYPT s2]] || 
-        [u containsString:[_C_CRYPT s3]] || 
-        ([u containsString:[_C_CRYPT s8]] && [u containsString:@"check"]) || 
-        [u containsString:[_C_CRYPT s7]]) { 
-        
+// 3. عزل البلاغات (Network Isolation)
+- (id)x_req:(id)r completionHandler:(void (^)(id, id, id))c {
+    NSString *u = [[(NSURLRequest *)r URL] absoluteString].lowercaseString;
+    if ([u containsString:[_C_CRYPT s7]] || [u containsString:[_C_CRYPT s8]]) {
         if (c) {
-            NSHTTPURLResponse *f = [[NSHTTPURLResponse alloc] initWithURL:r.URL statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:nil];
-            c([NSData data], f, nil);
+            id fakeRes = [[NSHTTPURLResponse alloc] initWithURL:[(NSURLRequest *)r URL] statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:nil];
+            c([NSData data], fakeRes, nil);
         }
         return nil;
     }
-    return [self _M_REQ:r completionHandler:c];
+    return [self x_req:r completionHandler:c];
 }
 @end
 
 @interface _C_VISUAL : NSObject
 @end
 @implementation _C_VISUAL
-+ (void)Engage {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(7.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        _V_WIN *w = [UIApplication sharedApplication].keyWindow;
++ (void)Ignite {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(7.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        UIWindow *w = [UIApplication sharedApplication].keyWindow;
         if (!w) return;
-        
-        _V_LBL *l = [[_V_LBL alloc] initWithFrame:CGRectMake(0, 25, [UIScreen mainScreen].bounds.size.width, 45)];
-        l.text = [_C_CRYPT ui_txt];
+        UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(0, 30, [UIScreen mainScreen].bounds.size.width, 45)];
+        l.text = [[_C_CRYPT ui] uppercaseString];
         l.font = [UIFont systemFontOfSize:28 weight:UIFontWeightBlack];
-        l.textColor = [_V_CLR colorWithWhite:0.08 alpha:1.0];
+        l.textColor = [UIColor colorWithWhite:0.05 alpha:1.0];
         l.textAlignment = NSTextAlignmentCenter;
-        
-        l.layer.shadowColor = [[_V_CLR redColor] CGColor];
-        l.layer.shadowOffset = CGSizeMake(0, 0);
+        l.layer.shadowColor = [[UIColor redColor] CGColor];
         l.layer.shadowOpacity = 1.0;
-        l.layer.shadowRadius = 5.0;
+        l.layer.shadowRadius = 8.0;
         
-        _V_ANI *ca = [_V_ANI animationWithKeyPath:[_C_CRYPT ui_clr]]; 
-        ca.fromValue = (id)[[_V_CLR redColor] CGColor];
-        ca.toValue = (id)[[_V_CLR orangeColor] CGColor];
-        ca.duration = 0.4;
-        ca.autoreverses = YES;
-        ca.repeatCount = INFINITY;
-        
-        _V_ANI *ra = [_V_ANI animationWithKeyPath:[_C_CRYPT ui_rad]];
-        ra.fromValue = @(5.0);
-        ra.toValue = @(15.0);
-        ra.duration = 0.25;
-        ra.autoreverses = YES;
-        ra.repeatCount = INFINITY;
-        
-        [l.layer addAnimation:ca forKey:@"a1"];
-        [l.layer addAnimation:ra forKey:@"a2"];
+        CABasicAnimation *f = [CABasicAnimation animationWithKeyPath:@"shadowRadius"];
+        f.fromValue = @(3.0); f.toValue = @(16.0); f.duration = 0.4;
+        f.autoreverses = YES; f.repeatCount = INFINITY;
+        [l.layer addAnimation:f forKey:@"burn"];
         
         [w addSubview:l];
         [w bringSubviewToFront:l];
@@ -168,37 +123,33 @@
 }
 @end
 
-static void Z(Class c, SEL o, SEL n) {
-    if (!c) return;
+static void H(Class c, SEL o, SEL n) {
     Method mO = class_getInstanceMethod(c, o);
     Method mN = class_getInstanceMethod(c, n);
-    if (class_addMethod(c, o, method_getImplementation(mN), method_getTypeEncoding(mN))) {
-        class_replaceMethod(c, o, method_getImplementation(mO), method_getTypeEncoding(mO));
-    } else { method_exchangeImplementations(mO, mN); }
+    method_exchangeImplementations(mO, mN);
 }
 
-static __attribute__((constructor)) void Init_Final() {
-    _V_MAN *fm = [_V_MAN defaultManager];
-    _V_STR *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+static __attribute__((constructor)) void Init_Sovereign() {
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSString *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     
-    _V_STR *t1 = [doc stringByAppendingPathComponent:[_C_CRYPT s4]];
-    _V_STR *t2 = [doc stringByAppendingPathComponent:[_C_CRYPT s5]];
-    
-    if ([fm fileExistsAtPath:t1]) [fm removeItemAtPath:t1 error:nil];
-    [fm createDirectoryAtPath:t1 withIntermediateDirectories:YES attributes:nil error:nil];
-    
-    if ([fm fileExistsAtPath:t2]) [fm removeItemAtPath:t2 error:nil];
-    [fm createDirectoryAtPath:t2 withIntermediateDirectories:YES attributes:nil error:nil];
+    // تصفير ملفات الباند الغيابي
+    NSArray *traps = @[[doc stringByAppendingPathComponent:[_C_CRYPT s2]], [doc stringByAppendingPathComponent:[_C_CRYPT s3]]];
+    for (NSString *t in traps) {
+        if ([fm fileExistsAtPath:t]) [fm removeItemAtPath:t error:nil];
+        [fm createDirectoryAtPath:t withIntermediateDirectories:YES attributes:nil error:nil];
+    }
 
-    static dispatch_once_t ot;
-    dispatch_once(&ot, ^{
-        Z([_V_MAN class], @selector(createFileAtPath:contents:attributes:), @selector(_M_WRT:contents:attributes:));
-        Z([_V_MAN class], @selector(fileExistsAtPath:), @selector(_M_CHK:));
-        Z([_V_DEF class], @selector(objectForKey:), @selector(_M_GET:));
-        Z([_V_DEF class], @selector(setObject:forKey:), @selector(_M_SET:forKey:));
-        Z([_V_SES class], @selector(dataTaskWithRequest:completionHandler:), @selector(_M_REQ:completionHandler:));
-        Z([_V_DEV class], @selector(identifierForVendor), @selector(_M_UID));
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        // تفعيل الحماية السيادية
+        H([NSBundle class], @selector(bundleIdentifier), @selector(x_bid));
+        H([NSBundle class], @selector(pathForResource:ofType:), @selector(x_pfr:ofType:));
+        H([NSFileManager class], @selector(createFileAtPath:contents:attributes:), @selector(x_wrt:contents:attributes:));
+        H([NSFileManager class], @selector(fileExistsAtPath:), @selector(x_chk:));
+        H([NSURLSession class], @selector(dataTaskWithRequest:completionHandler:), @selector(x_req:completionHandler:));
+        H([UIDevice class], @selector(identifierForVendor), @selector(identifierForVendor)); // الحفاظ على هوية ثابتة برمجياً
         
-        [_C_VISUAL Engage];
+        [_C_VISUAL Ignite];
     });
 }
